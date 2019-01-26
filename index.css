@@ -1,0 +1,145 @@
+@-moz-keyframes blinker {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@keyframes blinker {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+.de-plugin-messagebox {
+  position     : absolute;
+  left         : 15rem;
+  right        : 15rem;
+  bottom       : 3rem;
+  background   : rgba(37, 41, 45, 0.85);
+  color        : #e6e6e6;
+  font-family  : 'Helvetica Neue',Helvetica,Arial,sans-serif;
+  z-index      : 2;
+  border       : 1px solid #d4d4d4;
+  border-radius: 3px;
+  transition   : all 500ms;
+}
+.de-plugin-messagebox .name {
+  position     : absolute;
+  top          : -2.45rem;
+  background   : rgba(37, 41, 45, 0.85);
+  min-width    : 10rem;
+  font-size    : 1.5rem;
+  font-weight  : bold;
+  left         : 1rem;
+  padding      : 0.2rem 1rem;
+  border       : 1px solid #d4d4d4;
+  border-radius: 2px;
+}
+.de-plugin-messagebox .name.side-right {
+  left : auto;
+  right: 1rem;
+}
+.de-plugin-messagebox .close {
+  position        : absolute;
+  right           : 0.5rem;
+  width           : 3rem;
+  height          : 3rem;
+  bottom          : 0;
+  cursor          : pointer;
+  background-image: url( 'img/dialogue_next.png' );
+  background-size : 100% 100%;
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-name: blinker;
+  -moz-animation-duration: 1s;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+  animation-name: blinker;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.de-plugin-messagebox .close:hover {
+  opacity: 0.7;
+}
+
+.de-plugin-messagebox .content,
+.de-plugin-messagebox .sizer {
+  display      : block;
+  min-height   : 4rem;
+  /*line-height  : 1.5rem;*/
+  line-height  : 2rem;
+  /*font-size    : 1.2rem;*/
+  font-size    : 1.8rem;
+  padding      : 1.2rem 2rem;
+  padding-right: 3.5rem;
+}
+.de-plugin-messagebox .sizer {
+  position: relative;
+  float   : left;
+  left    : 0;
+  top     : 0;
+  width   : 1px;
+  padding-left : 0;
+  padding-right: 0;
+}
+.de-plugin-messagebox .picture {
+  position: absolute;
+  bottom  : -20px;
+  left    : -10px;
+}
+.de-plugin-messagebox .picture canvas {
+  background: none !important;
+}
+.de-plugin-messagebox .content span {
+  position: absolute;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 2440px) {
+  .de-plugin-messagebox {
+    left : 20rem;
+    right: 20rem;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .de-plugin-messagebox {
+    left : 6rem;
+    right: 6rem;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .de-plugin-messagebox {
+    left : 6rem;
+    right: 6rem;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .de-plugin-messagebox {
+    left  : 2rem;
+    right : 2rem;
+    bottom: 1rem;
+  }
+  
+  .de-plugin-messagebox .content,
+  .de-plugin-messagebox .sizer {
+    font-size     : 1.6rem;
+    line-height   : 1.8rem;
+    padding       : 1.5rem 2rem;
+    padding-right : 3.5rem;
+  }
+  .de-plugin-messagebox .sizer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
