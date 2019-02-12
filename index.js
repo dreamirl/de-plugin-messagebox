@@ -122,7 +122,6 @@ const MessageBox = function()
     this.currentWord   = 0;
     this.currentLetter = 0;
     this.currentVars   = params.vars || {};
-      //mbox.getElementsByClassName( 'content' )[ 0 ].innerHTML = text;
     var closeBtn = mbox.getElementsByClassName( 'close' )[ 0 ] || null;
       mbox.id = 'de-messagebox-' + id;
       mbox.className = 'de-plugin-messagebox';
@@ -135,24 +134,22 @@ const MessageBox = function()
     this.sizerEl.innerHTML = initLines;
     
     if ( closeBtn ) {
-      closeBtn.addEventListener( "pointerup",
-        function( e )
-        {
-          e.stopPropagation();
-          e.preventDefault();
-          mbox.manualClose();
-          return false;
-        }, false );
-      mbox.manualClose = function()
-      {
-        if ( params.sound )
-          DE.Audio.fx.play( params.sound );
-        _self.remove( mbox.id );
-        if ( callback )
-          callback.call( context || window );
-      };
-      closeBtn.style.display = "none";
-      this.closeBtn = closeBtn;
+      if ( params.noCloseButton ) {
+        closeBtn.style.display = 'none';
+        this.closeBtn = null;
+      }
+      else {
+        closeBtn.addEventListener( "pointerup",
+          function( e )
+          {
+            e.stopPropagation();
+            e.preventDefault();
+            mbox.manualClose();
+            return false;
+          }, false );
+        closeBtn.style.display = "none";
+        this.closeBtn = closeBtn;
+      }
     }
     if ( params.buffer ) {
       this.buffer.resolution = params.buffer.resolution || 1;
@@ -167,6 +164,14 @@ const MessageBox = function()
       mbox.getElementsByClassName( "name" )[ 0 ].className = "name";
       mbox.getElementsByClassName( "name" )[ 0 ].style.display = "none";
     }
+    mbox.manualClose = function()
+    {
+      if ( params.sound )
+        DE.Audio.fx.play( params.sound );
+      _self.remove( mbox.id );
+      if ( callback )
+        callback.call( context || window );
+    };
     mbox.addEventListener( "pointerup", function( e )
     {
       if ( !_self.isActive && _self.closeBtn )
@@ -196,9 +201,26 @@ const MessageBox = function()
     
     return mbox;
   }
+
+  this.shutDownCurrentBox = function()
+  {
+    if  ( !this.currentId ) {
+      return false;
+    }
+
+    if ( this.isActive ) {
+      this.preventDynamicText();
+    }
+    else if ( this.closeBtn ) {
+      this.mboxs[ this.currentId ].manualClose();
+    }
+
+    return true;
+  }
   
   this.removeAll = function()
   {
+    this.nMboxs = 0;
     this.textView = null;
     this.isActive = false;
     this.currentId = null;
@@ -206,6 +228,7 @@ const MessageBox = function()
     for ( var i in this.mboxs )
     {
       this.el.removeChild( this.mboxs[ i ] );
+      this.mboxs[ i ].manualClose = undefined;
       delete this.mboxs[ i ];
     }
   };
@@ -216,6 +239,7 @@ const MessageBox = function()
       return;
     }
     if ( this.mboxs[ id ].isRemoved ) {
+      this.mboxs[ id ].manualClose = undefined;
       delete this.mboxs[ id ];
       return;
     }
@@ -223,6 +247,7 @@ const MessageBox = function()
     this.textView = null;
     this.isActive = false;
     this.mboxs[ id ].isRemoved = true;
+    this.mboxs[ id ].manualClose = undefined;
     this.el.removeChild( this.mboxs[ id ] );
     this.currentId = null;
     this.trigger( "kill" );
