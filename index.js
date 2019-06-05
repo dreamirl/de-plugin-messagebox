@@ -1,7 +1,18 @@
+/**
+* Author
+ @Inateno / http://inateno.com / http://dreamirl.com
+*/
+
 import DE from '@dreamirl/dreamengine';
 import './index.css';
 
-const TEMPLATE = '<div><div class="name"></div><div class="picture"></div><span class="sizer"></span><span class="content"></span><div class="close"></div></div>';
+const TEMPLATE = `<div>
+  <div class="name"></div>
+  <div class="picture"></div>
+  <span class="sizer"></span>
+  <span class="content"></span>
+  <div class="close"></div>
+</div>`;
 
 const DEFAULT_DOM_CONTAINER_ID = 'render';
 
