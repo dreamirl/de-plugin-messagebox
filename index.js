@@ -39,6 +39,14 @@ const MessageBox = function()
   this.isActive     = false;
   this.typingFx     = '';
 
+  this.waitingTime = 0;
+  this.dialogDelays = {
+    letters: 16 * 2,
+    newLine: 250,
+    dot: 150,
+    playFX: 100
+  };
+
   var _self = this;
 
   this.init = function( params )
@@ -49,6 +57,15 @@ const MessageBox = function()
 
     this.template = params.template || TEMPLATE;
     this.typingFx = params.typingFx || '';
+
+    if (params.dialogDelays) {
+      for (let i in params.dialogDelays) {
+        if (!this.dialogDelays[i]) {
+          console.warn("DE.MessageBox init received an unknow value in parameter dialogDelays, you should double check your configuration =>", i);
+        }
+        this.dialogDelays[i] = params.dialogDelays[i];
+      }
+    }
 
     let domContainer = document.getElementById( params.containerId || DEFAULT_DOM_CONTAINER_ID );
     
@@ -270,9 +287,14 @@ const MessageBox = function()
 
   this.update = function( time )
   {
-    if ( !this.isActive || !this.textView || time < this.waitUntil ) {
+    if ( !this.isActive || !this.textView) {
       return;
     }
+    this.waitingTime -= time;
+    if (this.waitingTime > 0 ) {
+      return;
+    }
+    this.waitingTime = this.dialogDelays.letters;
     
     // First, we check if we have finished the word
     if ( !this.wordsArray[ this.currentWord ][ this.currentLetter ] ) {
@@ -295,7 +317,7 @@ const MessageBox = function()
       && this.wordsArray[ this.currentWord ][ this.currentLetter + 1 ] == "n" ) {
       this.textView.innerHTML += "<br />";
       this.currentLetter++;
-      this.waitUntil = time + 150;
+      this.waitingTime = this.dialogDelays.newLine;
       if ( this.typingFx ) {      
         DE.Audio.fx.stop( this.typingFx );
       }
@@ -308,7 +330,7 @@ const MessageBox = function()
     }
     else {
       if ( this.typingFx && !DE.Audio.fx._fxs[ this.typingFx ].playing() ) {
-        this.waitUntil = time + 100;
+        this.waitingTime = this.dialogDelays.playFX;
         if ( this.typingFx ) {
           DE.Audio.fx.play( this.typingFx );
         }
@@ -318,7 +340,7 @@ const MessageBox = function()
       
       if ( this.wordsArray[ this.currentWord ][ this.currentLetter ] === "."
         && !this.wordsArray[ this.currentWord ][ this.currentLetter + 1 ] ) {
-        this.waitUntil = time + 150;
+        this.waitingTime = this.dialogDelays.dot;
         if ( this.typingFx ) {
           DE.Audio.fx.stop( this.typingFx );
         }
